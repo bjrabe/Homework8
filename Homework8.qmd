@@ -1,0 +1,78 @@
+---
+title: "Homework 8"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Loading Packages
+
+First we load all packages which will be needed for this assignment.
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(matrixStats)
+```
+
+
+## Reading Data
+
+Next we read in the data.
+
+```{r}
+rentals <- read_csv('https://www4.stat.ncsu.edu/~online/datasets/SeoulBikeData.csv', locale=locale(encoding="latin1"))
+```
+
+
+## EDA
+
+Now we perform some exploratory data analysis.
+
+1. In this step, we check our imported tibble for missing data.
+
+```{r}
+colSums(is.na(rentals))
+```
+
+We see from the output that there are no missing values in any of the columns.
+
+2. In this step, we check the data type for each column. We first print the tibble to view this.
+
+```{r}
+rentals
+```
+
+We note that the date is in character form, which is not ideal. We fix this in the next step (step 3). Reviewing the data description, the quantitative variables appear to be Rented Bike Count, Hour, Temperature, Humidity, Wind speed, Visibility, Dew point temperature, Solar Radiation, Rainfall, and Snowfall. All of these quantitative variables are already stored as doubles, so we don't need to make a change here. We will view their summary stats to make sure the numbers make sense.
+
+```{r}
+rentals_numeric <- rentals |>
+  select(where(is.numeric)) |>
+  as.matrix()
+
+data.frame('mean' = colMeans(rentals_numeric),
+'median' = colMedians(rentals_numeric),
+'sd' = colSds(rentals_numeric),
+'IQR' = colIQRs(rentals_numeric),
+'range' = colRanges(rentals_numeric)) |>
+  round(1) 
+
+```
+
+
+The categorical variables appear to be Seasons, Holiday, and Functioning Day. They are stored as data type character, which we will fix in step 4.
+
+
+
+## Splitting Data
+  
+  
+  
+## Fitting Three MLR Models
+
+
+
+## Fitting and Testing Best Model
+
+
