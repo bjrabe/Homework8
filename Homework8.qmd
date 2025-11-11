@@ -30,7 +30,7 @@ rentals <- read_csv('https://www4.stat.ncsu.edu/~online/datasets/SeoulBikeData.c
 
 Now we perform some exploratory data analysis.
 
-1. In this step, we check our imported tibble for missing data.
+Step 1. In this step, we check our imported tibble for missing data.
 
 ```{r}
 colSums(is.na(rentals))
@@ -38,13 +38,21 @@ colSums(is.na(rentals))
 
 We see from the output that there are no missing values in any of the columns.
 
-2. In this step, we check the data type for each column. We first print the tibble to view this.
+Steps 2 through 4. We combine steps 2 through 4. First, we check the data type for each column. We first print the tibble to view this.
 
 ```{r}
 rentals
 ```
 
-We note that the date is in character form, which is not ideal. We fix this in the next step (step 3). Reviewing the data description, the quantitative variables appear to be Rented Bike Count, Hour, Temperature, Humidity, Wind speed, Visibility, Dew point temperature, Solar Radiation, Rainfall, and Snowfall. All of these quantitative variables are already stored as doubles, so we don't need to make a change here. We will view their summary stats to make sure the numbers make sense.
+We note that the date is in character form, which is not ideal. We fix this now by using the lubridate package to transform the date column into Date-type data. 
+
+```{r}
+rentals <- rentals |>
+  mutate(Date = dmy(Date))
+```
+
+
+Reviewing the data description, the quantitative variables appear to be Rented Bike Count, Hour, Temperature, Humidity, Wind speed, Visibility, Dew point temperature, Solar Radiation, Rainfall, and Snowfall. All of these quantitative variables are already stored as doubles, so we don't need to make a change here. We will view their summary stats to make sure the numbers make sense.
 
 ```{r}
 rentals_numeric <- rentals |>
@@ -60,8 +68,168 @@ data.frame('mean' = colMeans(rentals_numeric),
 
 ```
 
+Looking at the summary statistics for numeric variables, all of the results appear appropriate for what they represent.
 
-The categorical variables appear to be Seasons, Holiday, and Functioning Day. They are stored as data type character, which we will fix in step 4.
+The categorical variables appear to be Seasons, Holiday, and Functioning Day. They are stored as data type character. We convert them to factors. 
+
+```{r}
+rentals <- rentals |>
+  mutate(Seasons = as.factor(Seasons),
+         Holiday = as.factor(Holiday),
+         `Functioning Day` = as.factor(`Functioning Day`))
+```
+
+Now it is easy to check the unique values and counts for the categorical variables. 
+
+```{r}
+rentals |>
+  select(where(is.factor)) |>
+  summary()
+```
+
+
+Step 5. In this step, we rename the variables so they have easy to use names which follow R naming conventions.
+
+```{r}
+rentals <- rentals |>
+  rename('date' = 'Date',
+         'rented_bike_count' = 'Rented Bike Count',
+         'hour' = 'Hour',
+         'temperature' = 'Temperature(°C)',
+         'humidity' = 'Humidity(%)',
+         'wind_speed' = 'Wind speed (m/s)',
+         'visibility' = 'Visibility (10m)',
+         'dew_point_temp' = 'Dew point temperature(°C)',
+         'solar_radiation' = 'Solar Radiation (MJ/m2)',
+         'rainfall' = 'Rainfall(mm)',
+         'snowfall' = 'Snowfall (cm)',
+         'seasons' = 'Seasons',
+         'holiday' = 'Holiday',
+         'functioning_day' = 'Functioning Day')
+```
+
+
+Step 6. Now we perform summary statistics. 
+
+First we perform numerical summaries for quantitative variables without grouping by any categorical variables. We can copy the code from step 2 since we did this already. 
+
+```{r}
+rentals_numeric <- rentals |>
+  select(where(is.numeric)) |>
+  as.matrix()
+
+data.frame('mean' = colMeans(rentals_numeric),
+'median' = colMedians(rentals_numeric),
+'sd' = colSds(rentals_numeric),
+'IQR' = colIQRs(rentals_numeric),
+'range' = colRanges(rentals_numeric)) |>
+  round(1) 
+```
+
+Next we create one- and two-way contingency tables to summarize our categorical variables.
+
+```{r}
+table(rentals$seasons)
+table(rentals$holiday)
+table(rentals$functioning_day)
+table(rentals$seasons, rentals$holiday)
+table(rentals$seasons, rentals$functioning_day)
+table(rentals$holiday, rentals$functioning_day)
+```
+
+Next we will create numerical summaries for the Bike Rental Count across the different categorical variables. We will do it separately for each categorical variable. Then we do it grouped by all categorical variables as once. 
+
+```{r}
+rentals |>
+  group_by(functioning_day) |>
+  summarize(across(rented_bike_count,
+            list('mean' = ~mean(.x),
+                 'median' = ~median(.x),
+                 'sd' = ~sd(.x),
+                 'IQR' = ~IQR(.x),
+                 'min' = ~min(.x),
+                 'max' = ~max(.x)),
+            .names = "{.col}_{.fn}")) |>
+  as.data.frame()
+
+rentals |>
+  group_by(seasons) |>
+  summarize(across(rented_bike_count,
+            list('mean' = ~mean(.x),
+                 'median' = ~median(.x),
+                 'sd' = ~sd(.x),
+                 'IQR' = ~IQR(.x),
+                 'min' = ~min(.x),
+                 'max' = ~max(.x)),
+            .names = "{.col}_{.fn}")) |>
+  as.data.frame()
+
+rentals |>
+  group_by(holiday) |>
+  summarize(across(rented_bike_count,
+            list('mean' = ~mean(.x),
+                 'median' = ~median(.x),
+                 'sd' = ~sd(.x),
+                 'IQR' = ~IQR(.x),
+                 'min' = ~min(.x),
+                 'max' = ~max(.x)),
+            .names = "{.col}_{.fn}")) |>
+  as.data.frame()
+
+rentals |>
+  group_by(functioning_day, seasons, holiday) |>
+  summarize(across(rented_bike_count,
+            list('mean' = ~mean(.x),
+                 'median' = ~median(.x),
+                 'sd' = ~sd(.x),
+                 'IQR' = ~IQR(.x),
+                 'min' = ~min(.x),
+                 'max' = ~max(.x)),
+            .names = "{.col}_{.fn}")) |>
+  as.data.frame()
+            
+```
+
+As an example of what we can do with this information, we note that Rented Bike Counts are highest during the summer, and that in the summer the count doesn't seem to be affected by whether the day is a holiday, as long as it is a functioning day. 
+
+We see from the output that no bikes are rented when the Functioning Day variable takes a value of 'No'. Therefore it makes sense to remove these observations from the tibble, since in this homework the response variable we are interested in is the Rented Bike Count.
+
+```{r}
+rentals <- rentals |>
+  filter(functioning_day != 'No')
+```
+
+Now we use the subsetted data for the rest of the homework.
+
+
+Step 7. In this step, we create a new data tibble by summarizing across all hours of the day. This will simplify the data since each date will have one observation. The new tibble will not have an hours column since we are summarizing across the whole day, and it will not have a Functioning Day column since we removed the "No" observations previoulsy, so all remaining values are "Yes" observations. 
+
+```{r}
+rentals_condensed <- rentals |> 
+  group_by(date, seasons, holiday) |>
+  mutate(bike_count_daily = sum(rented_bike_count),
+         rainfall_daily = sum(rainfall),
+         snowfall_daily = sum(snowfall),
+         temp_mean = mean(temperature),
+         humidity_mean = mean(humidity),
+         wind_speed_mean = mean(wind_speed),
+         visibility_mean = mean(visibility),
+         dew_point_temp_mean = mean(dew_point_temp),
+         solar_radiation_mean = mean(solar_radiation)) |>
+  select(date, seasons, holiday, bike_count_daily, rainfall_daily, snowfall_daily, temp_mean, humidity_mean, wind_speed_mean, visibility_mean, dew_point_temp_mean, solar_radiation_mean) |>
+  unique()
+```
+
+We can view the first few rows to get a feel for our new data table.
+
+```{r}
+head(as.data.frame(rentals_condensed))
+```
+
+Step 8. We will redo basic summary stats with the new data, and we make some plots to explore the data. 
+
+
+
 
 
 
