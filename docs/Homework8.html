@@ -57,24 +57,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="Homework8_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Homework8_files/libs/quarto-html/quarto.js"></script>
-<script src="Homework8_files/libs/quarto-html/popper.min.js"></script>
-<script src="Homework8_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Homework8_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Homework8_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Homework8_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Homework8_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Homework8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Homework8_files/libs/bootstrap/bootstrap-8e86427a6cc1d18ca4cd6587f8769fcf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-52a95e23b7bbe465f12a407b63e8a523.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 
 
 </head>
 
 <body class="fullcontent">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -767,16 +804,16 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 263 × 15
    date       rainfall_daily snowfall_daily temp_mean humidity_mean
    &lt;date&gt;              &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
- 1 2018-09-01         -0.307         -0.209     1.09          0.196
- 2 2018-09-02         -0.307         -0.209     1.05         -0.255
- 3 2018-09-03          2.96          -0.209     0.932         1.62 
- 4 2018-09-04         -0.307         -0.209     0.902         0.902
- 5 2018-09-05         -0.307         -0.209     0.951         0.236
- 6 2018-09-06         -0.307         -0.209     0.986         0.845
- 7 2018-09-08         -0.307         -0.209     0.770        -0.653
- 8 2018-09-09         -0.307         -0.209     0.793        -0.600
- 9 2018-09-10         -0.307         -0.209     0.876        -0.557
-10 2018-09-11         -0.307         -0.209     0.760        -0.701
+ 1 2018-09-01         -0.318         -0.212     1.09          0.158
+ 2 2018-09-02         -0.318         -0.212     1.05         -0.285
+ 3 2018-09-03          2.49          -0.212     0.929         1.55 
+ 4 2018-09-04         -0.318         -0.212     0.899         0.848
+ 5 2018-09-05         -0.318         -0.212     0.949         0.196
+ 6 2018-09-07         -0.196         -0.212     0.806        -0.130
+ 7 2018-09-08         -0.318         -0.212     0.766        -0.674
+ 8 2018-09-10         -0.318         -0.212     0.873        -0.580
+ 9 2018-09-11         -0.318         -0.212     0.755        -0.721
+10 2018-09-13         -0.318         -0.212     0.915         0.229
 # ℹ 253 more rows
 # ℹ 10 more variables: wind_speed_mean &lt;dbl&gt;, visibility_mean &lt;dbl&gt;,
 #   dew_point_temp_mean &lt;dbl&gt;, solar_radiation_mean &lt;dbl&gt;,
@@ -861,12 +898,12 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 6 × 6
   .metric .estimator     mean     n  std_err .config        
   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
-1 rmse    standard   4324.       10 141.     pre0_mod0_post0
-2 rsq     standard      0.820    10   0.0140 pre0_mod0_post0
-3 rmse    standard   3480.       10 271.     pre0_mod0_post0
-4 rsq     standard      0.882    10   0.0174 pre0_mod0_post0
-5 rmse    standard   3167.       10 174.     pre0_mod0_post0
-6 rsq     standard      0.899    10   0.0142 pre0_mod0_post0</code></pre>
+1 rmse    standard   4188.       10 168.     pre0_mod0_post0
+2 rsq     standard      0.817    10   0.0167 pre0_mod0_post0
+3 rmse    standard   3150.       10 243.     pre0_mod0_post0
+4 rsq     standard      0.900    10   0.0143 pre0_mod0_post0
+5 rmse    standard   3020.       10 251.     pre0_mod0_post0
+6 rsq     standard      0.908    10   0.0147 pre0_mod0_post0</code></pre>
 </div>
 </div>
 <p>We see that the third model has the lowest training set RMSE, so we will choose this as our optimal model. We fit this model to the whole training set in the next step.</p>
@@ -884,8 +921,8 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 2 × 4
   .metric .estimator .estimate .config        
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
-1 rmse    standard    2477.    pre0_mod0_post0
-2 rsq     standard       0.936 pre0_mod0_post0</code></pre>
+1 rmse    standard    2768.    pre0_mod0_post0
+2 rsq     standard       0.927 pre0_mod0_post0</code></pre>
 </div>
 </div>
 <p>We also obtain the final table of coefficients for the model.</p>
@@ -898,41 +935,42 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 29 × 5
    term                                    estimate std.error statistic  p.value
    &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
- 1 (Intercept)                               16149.     1928.     8.37  5.11e-15
- 2 rainfall_daily_poly_1                    -28766.     6532.    -4.40  1.62e- 5
- 3 rainfall_daily_poly_2                     16500.     3542.     4.66  5.36e- 6
- 4 snowfall_daily_poly_1                     -1928.     3508.    -0.550 5.83e- 1
- 5 snowfall_daily_poly_2                     -2124.     3364.    -0.631 5.28e- 1
- 6 temp_mean_poly_1                          67466.    69693.     0.968 3.34e- 1
- 7 temp_mean_poly_2                         -12568.    18823.    -0.668 5.05e- 1
- 8 humidity_mean_poly_1                     -12273.    24403.    -0.503 6.15e- 1
- 9 humidity_mean_poly_2                      -4308.     6080.    -0.708 4.79e- 1
-10 wind_speed_mean_poly_1                    -7010.     3534.    -1.98  4.84e- 2
-11 wind_speed_mean_poly_2                     3141.     3317.     0.947 3.45e- 1
-12 visibility_mean_poly_1                     4520.     4706.     0.960 3.38e- 1
-13 visibility_mean_poly_2                      520.     3266.     0.159 8.74e- 1
-14 dew_point_temp_mean_poly_1                29908.    81421.     0.367 7.14e- 1
-15 dew_point_temp_mean_poly_2                -3634.    13048.    -0.278 7.81e- 1
-16 solar_radiation_mean_poly_1               46523.     6049.     7.69  4.04e-13
-17 solar_radiation_mean_poly_2               -7773.     3755.    -2.07  3.95e- 2
-18 holiday_No.Holiday                         5454.     1775.     3.07  2.37e- 3
-19 seasons_Spring                            -1593.     2533.    -0.629 5.30e- 1
-20 seasons_Summer                            17625.     3387.     5.20  4.28e- 7
-21 seasons_Winter                            -6964.     2874.    -2.42  1.61e- 2
-22 weekend_Yes                               -2041.      422.    -4.84  2.39e- 6
-23 seasons_Spring_x_holiday_No.Holiday       -3078.     2593.    -1.19  2.37e- 1
-24 seasons_Summer_x_holiday_No.Holiday       -1965.     2740.    -0.717 4.74e- 1
-25 seasons_Winter_x_holiday_No.Holiday       -3213.     2210.    -1.45  1.47e- 1
-26 seasons_Spring_x_temp_mean_poly_1         89178.    19584.     4.55  8.48e- 6
-27 seasons_Summer_x_temp_mean_poly_1       -260491.    39190.    -6.65  2.09e-10
-28 seasons_Winter_x_temp_mean_poly_1        -63944.    47916.    -1.33  1.83e- 1
-29 temp_mean_poly_1_x_rainfall_daily_poly… -333724.   122584.    -2.72  6.97e- 3</code></pre>
+ 1 (Intercept)                               1.89e4     2221.    8.53   1.87e-15
+ 2 rainfall_daily_poly_1                    -3.07e4     7038.   -4.36   1.98e- 5
+ 3 rainfall_daily_poly_2                     1.41e4     3608.    3.91   1.21e- 4
+ 4 snowfall_daily_poly_1                    -2.46e3     3535.   -0.695  4.88e- 1
+ 5 snowfall_daily_poly_2                    -1.53e3     3270.   -0.469  6.39e- 1
+ 6 temp_mean_poly_1                          1.53e4    77286.    0.198  8.43e- 1
+ 7 temp_mean_poly_2                         -2.96e4    18050.   -1.64   1.02e- 1
+ 8 humidity_mean_poly_1                     -2.30e4    28000.   -0.822  4.12e- 1
+ 9 humidity_mean_poly_2                     -6.89e3     6686.   -1.03   3.04e- 1
+10 wind_speed_mean_poly_1                   -5.87e3     3531.   -1.66   9.75e- 2
+11 wind_speed_mean_poly_2                   -4.59e1     3225.   -0.0142 9.89e- 1
+12 visibility_mean_poly_1                    1.07e4     4632.    2.30   2.23e- 2
+13 visibility_mean_poly_2                    9.23e2     3161.    0.292  7.71e- 1
+14 dew_point_temp_mean_poly_1                8.30e4    91157.    0.910  3.64e- 1
+15 dew_point_temp_mean_poly_2                4.49e3    12583.    0.357  7.22e- 1
+16 solar_radiation_mean_poly_1               4.84e4     5990.    8.08   3.41e-14
+17 solar_radiation_mean_poly_2              -4.43e3     3680.   -1.20   2.30e- 1
+18 holiday_No.Holiday                        2.33e3     2119.    1.10   2.72e- 1
+19 seasons_Spring                           -1.71e3     3017.   -0.566  5.72e- 1
+20 seasons_Summer                            1.26e4     3526.    3.57   4.34e- 4
+21 seasons_Winter                           -1.10e4     3084.   -3.56   4.50e- 4
+22 weekend_Yes                              -2.11e3      422.   -5.00   1.14e- 6
+23 seasons_Spring_x_holiday_No.Holiday      -2.67e3     3053.   -0.875  3.82e- 1
+24 seasons_Summer_x_holiday_No.Holiday       1.13e3     2949.    0.382  7.03e- 1
+25 seasons_Winter_x_holiday_No.Holiday       7.55e2     2439.    0.309  7.57e- 1
+26 seasons_Spring_x_temp_mean_poly_1         8.44e4    18661.    4.52   9.76e- 6
+27 seasons_Summer_x_temp_mean_poly_1        -2.24e5    38146.   -5.86   1.54e- 8
+28 seasons_Winter_x_temp_mean_poly_1        -7.23e4    45670.   -1.58   1.15e- 1
+29 temp_mean_poly_1_x_rainfall_daily_poly…  -3.76e5   132823.   -2.83   5.02e- 3</code></pre>
 </div>
 </div>
+
+
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
