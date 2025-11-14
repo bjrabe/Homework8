@@ -2,6 +2,7 @@
 title: "Homework 8"
 format: html
 editor: visual
+code-overflow: wrap
 editor_options: 
   chunk_output_type: console
 ---
@@ -138,7 +139,7 @@ table(rentals$seasons, rentals$functioning_day)
 table(rentals$holiday, rentals$functioning_day)
 ```
 
-Next we will create numerical summaries for the Bike Rental Count across the different categorical variables. We will do it separately for each categorical variable. Then we do it grouped by all categorical variables as once. 
+Next we will create numerical summaries for the Bike Rental Count across the different categorical variables. We will do it separately for each categorical variable. Then we do it grouped by all categorical variables at once. 
 
 ```{r}
 rentals |>
@@ -356,8 +357,8 @@ recipe(bike_count_daily ~., data = rentals_condensed_train) |>
   update_role(date, new_role = 'Date') |>
   step_normalize(all_numeric(), -all_outcomes()) |>
   step_dummy(holiday, seasons, weekend) |>
-  prep(training = rentals_condensed) |>
-  bake(rentals_condensed) 
+  prep(training = rentals_condensed_train) |>
+  bake(rentals_condensed_train)
 ```
 
 The result looks good, so we save the recipe in a recipe object, which is what we actually need for fitting the model.

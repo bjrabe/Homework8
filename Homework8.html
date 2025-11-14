@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Homework8_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Homework8_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Homework8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Homework8_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Homework8_files/libs/bootstrap/bootstrap-8e86427a6cc1d18ca4cd6587f8769fcf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -384,7 +384,7 @@ Autumn Spring Summer Winter
   No Holiday  271 8057</code></pre>
 </div>
 </div>
-<p>Next we will create numerical summaries for the Bike Rental Count across the different categorical variables. We will do it separately for each categorical variable. Then we do it grouped by all categorical variables as once.</p>
+<p>Next we will create numerical summaries for the Bike Rental Count across the different categorical variables. We will do it separately for each categorical variable. Then we do it grouped by all categorical variables at once.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>rentals <span class="sc">|&gt;</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(functioning_day) <span class="sc">|&gt;</span></span>
@@ -761,23 +761,23 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(date, <span class="at">new_role =</span> <span class="st">'Date'</span>) <span class="sc">|&gt;</span></span>
 <span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
 <span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(holiday, seasons, weekend) <span class="sc">|&gt;</span></span>
-<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>(<span class="at">training =</span> rentals_condensed) <span class="sc">|&gt;</span></span>
-<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(rentals_condensed) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>(<span class="at">training =</span> rentals_condensed_train) <span class="sc">|&gt;</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(rentals_condensed_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 353 × 15
+<pre><code># A tibble: 263 × 15
    date       rainfall_daily snowfall_daily temp_mean humidity_mean
    &lt;date&gt;              &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
- 1 2017-12-01        -0.303          -0.212    -1.30         -0.827
- 2 2017-12-02        -0.303          -0.212    -0.977         0.255
- 3 2017-12-03         0.0360         -0.212    -0.674         1.57 
- 4 2017-12-04        -0.295          -0.212    -1.12         -0.381
- 5 2017-12-05        -0.303          -0.212    -1.47         -1.46 
- 6 2017-12-06        -0.193           0.765    -1.09          0.849
- 7 2017-12-07        -0.303           0.970    -0.997         0.631
- 8 2017-12-08        -0.303          -0.212    -1.42         -1.10 
- 9 2017-12-09        -0.303          -0.212    -1.16         -0.818
-10 2017-12-10         0.0445          3.48     -0.989         0.776
-# ℹ 343 more rows
+ 1 2018-09-01         -0.307         -0.209     1.09          0.196
+ 2 2018-09-02         -0.307         -0.209     1.05         -0.255
+ 3 2018-09-03          2.96          -0.209     0.932         1.62 
+ 4 2018-09-04         -0.307         -0.209     0.902         0.902
+ 5 2018-09-05         -0.307         -0.209     0.951         0.236
+ 6 2018-09-06         -0.307         -0.209     0.986         0.845
+ 7 2018-09-08         -0.307         -0.209     0.770        -0.653
+ 8 2018-09-09         -0.307         -0.209     0.793        -0.600
+ 9 2018-09-10         -0.307         -0.209     0.876        -0.557
+10 2018-09-11         -0.307         -0.209     0.760        -0.701
+# ℹ 253 more rows
 # ℹ 10 more variables: wind_speed_mean &lt;dbl&gt;, visibility_mean &lt;dbl&gt;,
 #   dew_point_temp_mean &lt;dbl&gt;, solar_radiation_mean &lt;dbl&gt;,
 #   bike_count_daily &lt;dbl&gt;, holiday_No.Holiday &lt;dbl&gt;, seasons_Spring &lt;dbl&gt;,
@@ -861,12 +861,12 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 6 × 6
   .metric .estimator     mean     n  std_err .config        
   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
-1 rmse    standard   3963.       10 182.     pre0_mod0_post0
-2 rsq     standard      0.843    10   0.0137 pre0_mod0_post0
-3 rmse    standard   3201.       10 230.     pre0_mod0_post0
-4 rsq     standard      0.896    10   0.0138 pre0_mod0_post0
-5 rmse    standard   3049.       10 226.     pre0_mod0_post0
-6 rsq     standard      0.903    10   0.0149 pre0_mod0_post0</code></pre>
+1 rmse    standard   4324.       10 141.     pre0_mod0_post0
+2 rsq     standard      0.820    10   0.0140 pre0_mod0_post0
+3 rmse    standard   3480.       10 271.     pre0_mod0_post0
+4 rsq     standard      0.882    10   0.0174 pre0_mod0_post0
+5 rmse    standard   3167.       10 174.     pre0_mod0_post0
+6 rsq     standard      0.899    10   0.0142 pre0_mod0_post0</code></pre>
 </div>
 </div>
 <p>We see that the third model has the lowest training set RMSE, so we will choose this as our optimal model. We fit this model to the whole training set in the next step.</p>
@@ -884,8 +884,8 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 2 × 4
   .metric .estimator .estimate .config        
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
-1 rmse    standard    3170.    pre0_mod0_post0
-2 rsq     standard       0.903 pre0_mod0_post0</code></pre>
+1 rmse    standard    2477.    pre0_mod0_post0
+2 rsq     standard       0.936 pre0_mod0_post0</code></pre>
 </div>
 </div>
 <p>We also obtain the final table of coefficients for the model.</p>
@@ -898,35 +898,35 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <pre><code># A tibble: 29 × 5
    term                                    estimate std.error statistic  p.value
    &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
- 1 (Intercept)                               15781.     2176.    7.25   5.94e-12
- 2 rainfall_daily_poly_1                    -34888.    12524.   -2.79   5.78e- 3
- 3 rainfall_daily_poly_2                     12954.     3984.    3.25   1.32e- 3
- 4 snowfall_daily_poly_1                     -1104.     3294.   -0.335  7.38e- 1
- 5 snowfall_daily_poly_2                     -4528.     3077.   -1.47   1.43e- 1
- 6 temp_mean_poly_1                          -4223.    74321.   -0.0568 9.55e- 1
- 7 temp_mean_poly_2                         -37336.    17893.   -2.09   3.80e- 2
- 8 humidity_mean_poly_1                     -42246.    25898.   -1.63   1.04e- 1
- 9 humidity_mean_poly_2                      -3159.     5600.   -0.564  5.73e- 1
-10 wind_speed_mean_poly_1                   -10371.     3417.   -3.03   2.68e- 3
-11 wind_speed_mean_poly_2                     1114.     3027.    0.368  7.13e- 1
-12 visibility_mean_poly_1                      943.     4210.    0.224  8.23e- 1
-13 visibility_mean_poly_2                    -2604.     3040.   -0.857  3.92e- 1
-14 dew_point_temp_mean_poly_1               133830.    87004.    1.54   1.25e- 1
-15 dew_point_temp_mean_poly_2                 1769.    12038.    0.147  8.83e- 1
-16 solar_radiation_mean_poly_1               49438.     5499.    8.99   8.49e-17
-17 solar_radiation_mean_poly_2               -4737.     3519.   -1.35   1.80e- 1
-18 holiday_No.Holiday                         5481.     2035.    2.69   7.59e- 3
-19 seasons_Spring                             1275.     2943.    0.433  6.65e- 1
-20 seasons_Summer                            12805.     3484.    3.68   2.95e- 4
-21 seasons_Winter                           -11836.     3118.   -3.80   1.88e- 4
-22 weekend_Yes                               -2226.      395.   -5.63   5.12e- 8
-23 seasons_Spring_x_holiday_No.Holiday       -6331.     2983.   -2.12   3.49e- 2
-24 seasons_Summer_x_holiday_No.Holiday       -1426.     2851.   -0.500  6.17e- 1
-25 seasons_Winter_x_holiday_No.Holiday       -1575.     2447.   -0.643  5.21e- 1
-26 seasons_Spring_x_temp_mean_poly_1         68395.    18098.    3.78   2.00e- 4
-27 seasons_Summer_x_temp_mean_poly_1       -193858.    39458.   -4.91   1.69e- 6
-28 seasons_Winter_x_temp_mean_poly_1       -133599.    47645.   -2.80   5.47e- 3
-29 temp_mean_poly_1_x_rainfall_daily_poly… -193760.   244075.   -0.794  4.28e- 1</code></pre>
+ 1 (Intercept)                               16149.     1928.     8.37  5.11e-15
+ 2 rainfall_daily_poly_1                    -28766.     6532.    -4.40  1.62e- 5
+ 3 rainfall_daily_poly_2                     16500.     3542.     4.66  5.36e- 6
+ 4 snowfall_daily_poly_1                     -1928.     3508.    -0.550 5.83e- 1
+ 5 snowfall_daily_poly_2                     -2124.     3364.    -0.631 5.28e- 1
+ 6 temp_mean_poly_1                          67466.    69693.     0.968 3.34e- 1
+ 7 temp_mean_poly_2                         -12568.    18823.    -0.668 5.05e- 1
+ 8 humidity_mean_poly_1                     -12273.    24403.    -0.503 6.15e- 1
+ 9 humidity_mean_poly_2                      -4308.     6080.    -0.708 4.79e- 1
+10 wind_speed_mean_poly_1                    -7010.     3534.    -1.98  4.84e- 2
+11 wind_speed_mean_poly_2                     3141.     3317.     0.947 3.45e- 1
+12 visibility_mean_poly_1                     4520.     4706.     0.960 3.38e- 1
+13 visibility_mean_poly_2                      520.     3266.     0.159 8.74e- 1
+14 dew_point_temp_mean_poly_1                29908.    81421.     0.367 7.14e- 1
+15 dew_point_temp_mean_poly_2                -3634.    13048.    -0.278 7.81e- 1
+16 solar_radiation_mean_poly_1               46523.     6049.     7.69  4.04e-13
+17 solar_radiation_mean_poly_2               -7773.     3755.    -2.07  3.95e- 2
+18 holiday_No.Holiday                         5454.     1775.     3.07  2.37e- 3
+19 seasons_Spring                            -1593.     2533.    -0.629 5.30e- 1
+20 seasons_Summer                            17625.     3387.     5.20  4.28e- 7
+21 seasons_Winter                            -6964.     2874.    -2.42  1.61e- 2
+22 weekend_Yes                               -2041.      422.    -4.84  2.39e- 6
+23 seasons_Spring_x_holiday_No.Holiday       -3078.     2593.    -1.19  2.37e- 1
+24 seasons_Summer_x_holiday_No.Holiday       -1965.     2740.    -0.717 4.74e- 1
+25 seasons_Winter_x_holiday_No.Holiday       -3213.     2210.    -1.45  1.47e- 1
+26 seasons_Spring_x_temp_mean_poly_1         89178.    19584.     4.55  8.48e- 6
+27 seasons_Summer_x_temp_mean_poly_1       -260491.    39190.    -6.65  2.09e-10
+28 seasons_Winter_x_temp_mean_poly_1        -63944.    47916.    -1.33  1.83e- 1
+29 temp_mean_poly_1_x_rainfall_daily_poly… -333724.   122584.    -2.72  6.97e- 3</code></pre>
 </div>
 </div>
 </section>
