@@ -345,7 +345,7 @@ In this section, we fit 3 MLR models on the training data using 10-fold cross va
 We begin by creating 3 recipes as outlined in the homework instructions. For the first recipe we use the date variable to create a weekend/weekday categorical (factor) variable which replaces the date variable, standardize the numeric variables, and create dummy variables for the categorical variables (seasons, holiday, and new weekend/weekday variable). First we will use `prep()` and `bake()` to print the transformed data as a sanity check. 
 
 ```{r}
-recipe(bike_count_daily ~., data = rentals_condensed) |>
+recipe(bike_count_daily ~., data = rentals_condensed_train) |>
   step_date(date, features = 'dow') |>
   step_mutate(weekend = factor(ifelse(
     date_dow %in% c('Sat', 'Sun'),
@@ -363,7 +363,7 @@ recipe(bike_count_daily ~., data = rentals_condensed) |>
 The result looks good, so we save the recipe in a recipe object, which is what we actually need for fitting the model.
 
 ```{r}
-rentals_rec1 <- recipe(bike_count_daily ~., data = rentals_condensed) |>
+rentals_rec1 <- recipe(bike_count_daily ~., data = rentals_condensed_train) |>
   step_date(date, features = 'dow') |>
   step_mutate(weekend = factor(ifelse(
     date_dow %in% c('Sat', 'Sun'),
@@ -376,8 +376,96 @@ rentals_rec1 <- recipe(bike_count_daily ~., data = rentals_condensed) |>
   step_dummy(holiday, seasons, weekend)
 ```
 
+To create the second recipe, we use the same steps as above but we add in interaction terms between seasons and holiday, seasons and temperature, and temperature and rainfall.
 
+```{r}
+rentals_rec2 <- recipe(bike_count_daily ~., data = rentals_condensed_train) |>
+  step_date(date, features = 'dow') |>
+  step_mutate(weekend = factor(ifelse(
+    date_dow %in% c('Sat', 'Sun'),
+    'Yes',
+    'No'
+  ))) |>
+  step_rm(date_dow) |>
+  update_role(date, new_role = 'Date') |>
+  step_normalize(all_numeric(), -all_outcomes()) |>
+  step_dummy(holiday, seasons, weekend) |>
+  step_interact(terms = ~ starts_with('seasons'):holiday_No.Holiday + starts_with('seasons'):temp_mean + temp_mean:rainfall_daily) 
+```
+
+Finally, for the third recipe, we do the same as for the second recipe but add in quadratic terms for each numeric predictor.
+
+```{r}
+rentals_rec3 <- recipe(bike_count_daily ~., data = rentals_condensed_train) |>
+  step_date(date, features = 'dow') |>
+  step_mutate(weekend = factor(ifelse(
+    date_dow %in% c('Sat', 'Sun'),
+    'Yes',
+    'No'
+  ))) |>
+  step_rm(date_dow) |>
+  update_role(date, new_role = 'Date') |>
+  step_normalize(all_numeric(), -all_outcomes()) |>
+  step_poly(all_numeric(), -all_outcomes()) |>
+  step_dummy(holiday, seasons, weekend) |>
+  step_interact(terms = ~ starts_with('seasons'):holiday_No.Holiday + starts_with('seasons'):temp_mean_poly_1 + temp_mean_poly_1:rainfall_daily_poly_1) 
+  
+```
+
+Now we set up the model using the linear model engine and use `fit_resamples()` to fit the models.
+
+```{r}
+rentals_mod <- linear_reg() %>% 
+  set_engine('lm')
+
+rentals_CV_wkfl1 <- workflow() |>
+  add_recipe(rentals_rec1) |>
+  add_model(rentals_mod) 
+
+rentals_CV_wkfl2 <- workflow() |>
+  add_recipe(rentals_rec2) |>
+  add_model(rentals_mod) 
+
+rentals_CV_wkfl3 <- workflow() |>
+  add_recipe(rentals_rec3) |>
+  add_model(rentals_mod) 
+
+rentals_CV_fit1 <- fit_resamples(rentals_CV_wkfl1, rentals_10_fold)
+
+rentals_CV_fit2 <- fit_resamples(rentals_CV_wkfl2, rentals_10_fold)
+
+rentals_CV_fit3 <- fit_resamples(rentals_CV_wkfl3, rentals_10_fold)
+
+```
+
+Finally, we can view the training set metrics for each model to compare models and determine which to use for the final fitting.
+
+```{r}
+rbind(rentals_CV_fit1 |> collect_metrics(),
+      rentals_CV_fit2 |> collect_metrics(),
+      rentals_CV_fit3 |> collect_metrics())
+```
+
+We see that the third model has the lowest training set RMSE, so we will choose this as our optimal model. We fit this model to the whole training set in the next step. 
 
 ## Fitting and Testing Best Model
 
+Now that we have chosen the 'best' model (the third) as the one with the lowest training set RMSE, we fit this model to the full training set and print the test set RMSE.
+
+```{r}
+rentals_fit_final <- rentals_CV_wkfl3 |>
+  last_fit(rentals_condensed_split)
+
+rentals_fit_final |>
+  collect_metrics()
+```
+
+We also obtain the final table of coefficients for the model. 
+
+```{r}
+rentals_fit_final |>
+  extract_fit_parsnip()  |>
+  tidy() |>
+  print(n = 30)
+```
 

@@ -750,7 +750,7 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <p>In this section, we fit 3 MLR models on the training data using 10-fold cross validation and pick a best model on the training data.</p>
 <p>We begin by creating 3 recipes as outlined in the homework instructions. For the first recipe we use the date variable to create a weekend/weekday categorical (factor) variable which replaces the date variable, standardize the numeric variables, and create dummy variables for the categorical variables (seasons, holiday, and new weekend/weekday variable). First we will use <code>prep()</code> and <code>bake()</code> to print the transformed data as a sanity check.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed_train) <span class="sc">|&gt;</span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="st">'dow'</span>) <span class="sc">|&gt;</span></span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">weekend =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(</span>
 <span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    date_dow <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Sat'</span>, <span class="st">'Sun'</span>),</span>
@@ -786,7 +786,7 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 </div>
 <p>The result looks good, so we save the recipe in a recipe object, which is what we actually need for fitting the model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>rentals_rec1 <span class="ot">&lt;-</span> <span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>rentals_rec1 <span class="ot">&lt;-</span> <span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed_train) <span class="sc">|&gt;</span></span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="st">'dow'</span>) <span class="sc">|&gt;</span></span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">weekend =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(</span>
 <span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>    date_dow <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Sat'</span>, <span class="st">'Sun'</span>),</span>
@@ -798,9 +798,137 @@ solar_radiation_mean     0.6     0.6    0.3     0.5     0.0     1.2</code></pre>
 <span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
 <span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(holiday, seasons, weekend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>To create the second recipe, we use the same steps as above but we add in interaction terms between seasons and holiday, seasons and temperature, and temperature and rainfall.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>rentals_rec2 <span class="ot">&lt;-</span> <span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed_train) <span class="sc">|&gt;</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="st">'dow'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">weekend =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    date_dow <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Sat'</span>, <span class="st">'Sun'</span>),</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Yes'</span>,</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'No'</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  ))) <span class="sc">|&gt;</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_rm</span>(date_dow) <span class="sc">|&gt;</span></span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(date, <span class="at">new_role =</span> <span class="st">'Date'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(holiday, seasons, weekend) <span class="sc">|&gt;</span></span>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="at">terms =</span> <span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">'seasons'</span>)<span class="sc">:</span>holiday_No.Holiday <span class="sc">+</span> <span class="fu">starts_with</span>(<span class="st">'seasons'</span>)<span class="sc">:</span>temp_mean <span class="sc">+</span> temp_mean<span class="sc">:</span>rainfall_daily) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, for the third recipe, we do the same as for the second recipe but add in quadratic terms for each numeric predictor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>rentals_rec3 <span class="ot">&lt;-</span> <span class="fu">recipe</span>(bike_count_daily <span class="sc">~</span>., <span class="at">data =</span> rentals_condensed_train) <span class="sc">|&gt;</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="st">'dow'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">weekend =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    date_dow <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Sat'</span>, <span class="st">'Sun'</span>),</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Yes'</span>,</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'No'</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>  ))) <span class="sc">|&gt;</span></span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_rm</span>(date_dow) <span class="sc">|&gt;</span></span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(date, <span class="at">new_role =</span> <span class="st">'Date'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_poly</span>(<span class="fu">all_numeric</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(holiday, seasons, weekend) <span class="sc">|&gt;</span></span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="at">terms =</span> <span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">'seasons'</span>)<span class="sc">:</span>holiday_No.Holiday <span class="sc">+</span> <span class="fu">starts_with</span>(<span class="st">'seasons'</span>)<span class="sc">:</span>temp_mean_poly_1 <span class="sc">+</span> temp_mean_poly_1<span class="sc">:</span>rainfall_daily_poly_1) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we set up the model using the linear model engine and use <code>fit_resamples()</code> to fit the models.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>rentals_mod <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">'lm'</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>rentals_CV_wkfl1 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rentals_rec1) <span class="sc">|&gt;</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rentals_mod) </span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>rentals_CV_wkfl2 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rentals_rec2) <span class="sc">|&gt;</span></span>
+<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rentals_mod) </span>
+<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-12"><a href="#cb82-12" aria-hidden="true" tabindex="-1"></a>rentals_CV_wkfl3 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb82-13"><a href="#cb82-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rentals_rec3) <span class="sc">|&gt;</span></span>
+<span id="cb82-14"><a href="#cb82-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rentals_mod) </span>
+<span id="cb82-15"><a href="#cb82-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-16"><a href="#cb82-16" aria-hidden="true" tabindex="-1"></a>rentals_CV_fit1 <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(rentals_CV_wkfl1, rentals_10_fold)</span>
+<span id="cb82-17"><a href="#cb82-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-18"><a href="#cb82-18" aria-hidden="true" tabindex="-1"></a>rentals_CV_fit2 <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(rentals_CV_wkfl2, rentals_10_fold)</span>
+<span id="cb82-19"><a href="#cb82-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-20"><a href="#cb82-20" aria-hidden="true" tabindex="-1"></a>rentals_CV_fit3 <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(rentals_CV_wkfl3, rentals_10_fold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can view the training set metrics for each model to compare models and determine which to use for the final fitting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(rentals_CV_fit1 <span class="sc">|&gt;</span> <span class="fu">collect_metrics</span>(),</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>      rentals_CV_fit2 <span class="sc">|&gt;</span> <span class="fu">collect_metrics</span>(),</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>      rentals_CV_fit3 <span class="sc">|&gt;</span> <span class="fu">collect_metrics</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  .metric .estimator     mean     n  std_err .config        
+  &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
+1 rmse    standard   3963.       10 182.     pre0_mod0_post0
+2 rsq     standard      0.843    10   0.0137 pre0_mod0_post0
+3 rmse    standard   3201.       10 230.     pre0_mod0_post0
+4 rsq     standard      0.896    10   0.0138 pre0_mod0_post0
+5 rmse    standard   3049.       10 226.     pre0_mod0_post0
+6 rsq     standard      0.903    10   0.0149 pre0_mod0_post0</code></pre>
+</div>
+</div>
+<p>We see that the third model has the lowest training set RMSE, so we will choose this as our optimal model. We fit this model to the whole training set in the next step.</p>
 </section>
 <section id="fitting-and-testing-best-model" class="level2">
 <h2 class="anchored" data-anchor-id="fitting-and-testing-best-model">Fitting and Testing Best Model</h2>
+<p>Now that we have chosen the ‘best’ model (the third) as the one with the lowest training set RMSE, we fit this model to the full training set and print the test set RMSE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>rentals_fit_final <span class="ot">&lt;-</span> rentals_CV_wkfl3 <span class="sc">|&gt;</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">last_fit</span>(rentals_condensed_split)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>rentals_fit_final <span class="sc">|&gt;</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  .metric .estimator .estimate .config        
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
+1 rmse    standard    3170.    pre0_mod0_post0
+2 rsq     standard       0.903 pre0_mod0_post0</code></pre>
+</div>
+</div>
+<p>We also obtain the final table of coefficients for the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>rentals_fit_final <span class="sc">|&gt;</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_parsnip</span>()  <span class="sc">|&gt;</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 29 × 5
+   term                                    estimate std.error statistic  p.value
+   &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 (Intercept)                               15781.     2176.    7.25   5.94e-12
+ 2 rainfall_daily_poly_1                    -34888.    12524.   -2.79   5.78e- 3
+ 3 rainfall_daily_poly_2                     12954.     3984.    3.25   1.32e- 3
+ 4 snowfall_daily_poly_1                     -1104.     3294.   -0.335  7.38e- 1
+ 5 snowfall_daily_poly_2                     -4528.     3077.   -1.47   1.43e- 1
+ 6 temp_mean_poly_1                          -4223.    74321.   -0.0568 9.55e- 1
+ 7 temp_mean_poly_2                         -37336.    17893.   -2.09   3.80e- 2
+ 8 humidity_mean_poly_1                     -42246.    25898.   -1.63   1.04e- 1
+ 9 humidity_mean_poly_2                      -3159.     5600.   -0.564  5.73e- 1
+10 wind_speed_mean_poly_1                   -10371.     3417.   -3.03   2.68e- 3
+11 wind_speed_mean_poly_2                     1114.     3027.    0.368  7.13e- 1
+12 visibility_mean_poly_1                      943.     4210.    0.224  8.23e- 1
+13 visibility_mean_poly_2                    -2604.     3040.   -0.857  3.92e- 1
+14 dew_point_temp_mean_poly_1               133830.    87004.    1.54   1.25e- 1
+15 dew_point_temp_mean_poly_2                 1769.    12038.    0.147  8.83e- 1
+16 solar_radiation_mean_poly_1               49438.     5499.    8.99   8.49e-17
+17 solar_radiation_mean_poly_2               -4737.     3519.   -1.35   1.80e- 1
+18 holiday_No.Holiday                         5481.     2035.    2.69   7.59e- 3
+19 seasons_Spring                             1275.     2943.    0.433  6.65e- 1
+20 seasons_Summer                            12805.     3484.    3.68   2.95e- 4
+21 seasons_Winter                           -11836.     3118.   -3.80   1.88e- 4
+22 weekend_Yes                               -2226.      395.   -5.63   5.12e- 8
+23 seasons_Spring_x_holiday_No.Holiday       -6331.     2983.   -2.12   3.49e- 2
+24 seasons_Summer_x_holiday_No.Holiday       -1426.     2851.   -0.500  6.17e- 1
+25 seasons_Winter_x_holiday_No.Holiday       -1575.     2447.   -0.643  5.21e- 1
+26 seasons_Spring_x_temp_mean_poly_1         68395.    18098.    3.78   2.00e- 4
+27 seasons_Summer_x_temp_mean_poly_1       -193858.    39458.   -4.91   1.69e- 6
+28 seasons_Winter_x_temp_mean_poly_1       -133599.    47645.   -2.80   5.47e- 3
+29 temp_mean_poly_1_x_rainfall_daily_poly… -193760.   244075.   -0.794  4.28e- 1</code></pre>
+</div>
+</div>
 </section>
 
 </main>
